@@ -1,25 +1,119 @@
-import logo from './logo.svg';
 import './App.css';
+import Navigation from './components/Navigation/Navigation';
+import Logo from './components/Logo/Logo';
+import Input from './components/Input/Input';
+import Rank from './components/Rank/Rank';
+import ParticlesBg from 'particles-bg'
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
+import { Component } from 'react';
+import Clarifai from 'clarifai'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  //  //////////////////////////////////////////////////////////////////////////////////////////
+  //   // In this section, we set the user authentication, app ID, model details, and the URL
+  //   // of the image we want as an input. Change these strings to run your own example.
+  //   /////////////////////////////////////////////////////////////////////////////////////////
+
+  //   const USER_ID = 'ricsala';
+  //   // Your PAT (Personal Access Token) can be found in the portal under Authentification
+  //   const PAT = 'eff76052abbc402bab1f66656c5f9908';
+  //   const APP_ID = 'face-recognition';
+  //   // Change these to whatever model and image URL you want to use
+  //   const MODEL_ID = 'general-image-recognition';
+  //   const MODEL_VERSION_ID = 'aa7f35c01e0642fda5cf400f543e7c40';
+  //   const IMAGE_URL = 'https://samples.clarifai.com/metro-north.jpg';
+  
+
+
+
+
+   
+
+class App extends Component {
+
+  constructor() {
+    super()
+    this.state = {
+      input: "",
+      url: ""
+    }
+  }
+
+  onInputChange = (event) => {
+    this.setState({ input: event.target.value });
+    console.log(this.state.input)
+
+  }
+
+  onButtonSubmit = () => {
+    console.log("submitted!")
+    this.setState({ url: this.state.input })
+    
+    // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
+    // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
+    // this will default to the latest version_id
+
+        //////////////////////////////////////////////////////////////////////////////////////////
+    // In this section, we set the user authentication, app ID, model details, and the URL
+    // of the image we want as an input. Change these strings to run your own example.
+    /////////////////////////////////////////////////////////////////////////////////////////
+
+    const USER_ID = 'ricsala';
+    // Your PAT (Personal Access Token) can be found in the portal under Authentification
+    const PAT = 'eff76052abbc402bab1f66656c5f9908';
+    const APP_ID = 'face-recognition';
+    // Change these to whatever model and image URL you want to use
+    const MODEL_ID = 'face-detection';
+    // const MODEL_VERSION_ID = 'aa7f35c01e0642fda5cf400f543e7c40';    
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // YOU DO NOT NEED TO CHANGE ANYTHING BELOW THIS LINE TO RUN THIS EXAMPLE
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    const raw = JSON.stringify({
+        "user_app_id": {
+            "user_id": USER_ID,
+            "app_id": APP_ID
+        },
+        "inputs": [
+            {
+                "data": {
+                    "image": {
+                        "url": this.state.input
+                    }
+                }
+            }
+        ]
+    });
+
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Key ' + PAT
+        },
+        body: raw
+    };
+
+    
+    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/outputs", requestOptions)
+        .then(response => response.json())
+        .then(result => console.log("RESULT: ", result.outputs[0].data.regions[0].region_info.bounding_box))
+        .catch(error => console.log('error', error));
+
+  }
+  render() {
+    return (
+      <div className="App">
+        {/* <ParticlesBg type="tadpole" bg={true} num={200} /> */}
+  
+        <Navigation />
+        <Logo />
+        <Rank />
+        <Input onInputChange={ this.onInputChange } onButtonSubmit = { this.onButtonSubmit } />
+        <FaceRecognition />
+      </div>
+    );
+  }
 }
 
 export default App;
