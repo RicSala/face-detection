@@ -10,10 +10,10 @@ const Input = ( { onInputChange, onButtonSubmit }) => {
                     type="text"
                     onChange={ onInputChange }
                     />
-            <small id="name-desc" className="f6 black-60 db mb2">Introduce an image url the detect faces</small>
+            <small id="name-desc" className="f4 black-80 db mb2">Introduce an image url to detect faces</small>
             </div>
-            <button className="pa2 f4 dim pointer bg-light-purple bn white w-30"
-                    onClick={onButtonSubmit}>Detect!</button>
+            <button className="pa2 f4 grow pointer bg-light-purple bn white w-30"
+                    onClick={ onButtonSubmit }>Detect!</button>
                 
             </div>
     )
