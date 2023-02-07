@@ -37,7 +37,7 @@ class Register extends Component {
       body: JSON.stringify(newUser),
     }
     
-    fetch('http://localhost:3000/register', conf)
+    fetch('https://face-detection-api.onrender.com/register', conf)
       .then(response => response.json())
       .then(user => {
         if (user.id) {

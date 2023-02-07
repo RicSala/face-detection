@@ -31,7 +31,7 @@ class Signin extends React.Component {
       body: JSON.stringify(user),
     }
 
-    fetch('http://localhost:3000/signin', conf)
+    fetch('https://face-detection-api.onrender.com/signin', conf)
       .then(response => response.json())
       .then(data => {
         
